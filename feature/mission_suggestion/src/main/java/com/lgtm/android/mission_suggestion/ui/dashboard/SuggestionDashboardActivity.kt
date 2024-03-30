@@ -8,6 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.lgtm.android.common_ui.base.BaseComposeActivity
 import com.lgtm.android.common_ui.theme.LGTMTheme
+import com.lgtm.android.mission_suggestion.ui.dashboard.presentation.SuggestionDashboardScreen
 import com.lgtm.android.mission_suggestion.ui.dashboard.presentation.contract.SuggestionDashboardUiEffect
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -23,7 +24,7 @@ class SuggestionDashboardActivity : BaseComposeActivity() {
     @Composable
     override fun Content() {
         LGTMTheme {
-            // TODO: SuggestionDashboardScreen 배치
+            SuggestionDashboardScreen()
         }
     }
 

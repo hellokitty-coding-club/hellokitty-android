@@ -1,4 +1,4 @@
-package com.lgtm.android.mission_suggestion.ui.dashboard.presentation.sdui
+package com.lgtm.android.mission_suggestion.ui.dashboard.presentation.item
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

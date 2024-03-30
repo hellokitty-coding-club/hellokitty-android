@@ -33,9 +33,9 @@ import com.lgtm.android.common_ui.theme.LGTMTheme
 import com.lgtm.android.common_ui.util.UiState
 import com.lgtm.android.common_ui.util.throttleClickable
 import com.lgtm.android.mission_suggestion.ui.dashboard.SuggestionDashboardViewModel
-import com.lgtm.android.mission_suggestion.ui.dashboard.presentation.sdui.SuggestionContent
-import com.lgtm.android.mission_suggestion.ui.dashboard.presentation.sdui.SuggestionInfo
-import com.lgtm.android.mission_suggestion.ui.dashboard.presentation.sdui.SuggestionListEmpty
+import com.lgtm.android.mission_suggestion.ui.dashboard.presentation.item.SuggestionContent
+import com.lgtm.android.mission_suggestion.ui.dashboard.presentation.item.SuggestionInfo
+import com.lgtm.android.mission_suggestion.ui.dashboard.presentation.item.SuggestionListEmpty
 import com.lgtm.domain.mission_suggestion.SuggestionContent
 import com.lgtm.domain.mission_suggestion.SuggestionHeaderVO
 import com.lgtm.domain.mission_suggestion.SuggestionViewType

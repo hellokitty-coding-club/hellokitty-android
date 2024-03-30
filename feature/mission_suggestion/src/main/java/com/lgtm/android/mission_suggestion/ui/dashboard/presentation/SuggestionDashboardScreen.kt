@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -55,12 +56,13 @@ fun SuggestionDashboardScreen(
         val (suggestionSection, createBtn) = createRefs()
 
         Column(
-            modifier = Modifier.constrainAs(suggestionSection){
+            modifier = Modifier.fillMaxHeight().constrainAs(suggestionSection){
                 top.linkTo(parent.top)
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
                 bottom.linkTo(parent.bottom)
-            }
+            },
+            verticalArrangement = Arrangement.Top
         ) {
             SuggestionHeader{ viewModel.goBack() }
 
@@ -77,7 +79,9 @@ fun SuggestionDashboardScreen(
                                 ){ placeable.place(0, 0) }
                             },
                         suggestionList = (suggestionDashboardState as UiState.Success).data,
-                        onSuggestionClick = viewModel::moveToSuggestionDetail
+                        onSuggestionClick = viewModel::moveToSuggestionDetail,
+                        onSuggestionLike = viewModel::likeSuggestion,
+                        onSuggestionCancelLike = viewModel::cancelLikeSuggestion
                     )
                 }
                 is UiState.Failure -> { /* no-op */ }
@@ -150,7 +154,9 @@ fun SuggestionHeader(
 fun SuggestionList(
     modifier: Modifier = Modifier,
     suggestionList: List<SuggestionContent>,
-    onSuggestionClick: (Int) -> Unit
+    onSuggestionClick: (Int) -> Unit,
+    onSuggestionLike: (Int, Int) -> Unit,
+    onSuggestionCancelLike: (Int, Int) -> Unit
 ) {
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
@@ -161,7 +167,7 @@ fun SuggestionList(
             if (index == 0) {
                 Spacer(modifier = Modifier.height(25.dp))
             }
-            getSuggestionViewByType(suggestionList[index], onSuggestionClick)
+            getSuggestionViewByType(index, suggestionList[index], onSuggestionClick, onSuggestionLike, onSuggestionCancelLike)
             // 마지막 요소 아래에 Spacer 배치
             if (index == suggestionList.size - 1) {
                 Spacer(modifier = Modifier.height(20.dp))
@@ -172,12 +178,15 @@ fun SuggestionList(
 
 @Composable
 fun getSuggestionViewByType(
+    index: Int,
     suggestionContent: SuggestionContent,
-    onSuggestionClick: (Int) -> Unit
+    onSuggestionClick: (Int) -> Unit,
+    onSuggestionLike: (Int, Int) -> Unit,
+    onSuggestionCancelLike: (Int, Int) -> Unit
 ) {
     when(suggestionContent.viewType) {
         SuggestionViewType.HEADER -> SuggestionInfo(suggestionContent as SuggestionHeaderVO)
-        SuggestionViewType.CONTENT -> SuggestionContent(suggestionContent as SuggestionUI, onSuggestionClick)
+        SuggestionViewType.CONTENT -> SuggestionContent(index, suggestionContent as SuggestionUI, onSuggestionClick, onSuggestionLike, onSuggestionCancelLike)
         SuggestionViewType.EMPTY -> SuggestionListEmpty()
     }
 }

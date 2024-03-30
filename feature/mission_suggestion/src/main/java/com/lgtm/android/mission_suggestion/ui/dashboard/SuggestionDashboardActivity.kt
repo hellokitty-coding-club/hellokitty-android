@@ -31,6 +31,10 @@ class SuggestionDashboardActivity : BaseComposeActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         observeUiEffect()
+    }
+
+    override fun onResume() {
+        super.onResume()
         fetchSuggestionList()
     }
 

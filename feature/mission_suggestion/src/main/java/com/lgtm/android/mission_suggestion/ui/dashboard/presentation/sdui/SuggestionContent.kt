@@ -23,8 +23,11 @@ import com.lgtm.android.common_ui.util.throttleClickable
 
 @Composable
 fun SuggestionContent(
+    index: Int,
     suggestionUI: SuggestionUI,
-    onSuggestionClick: (Int) -> Unit
+    onSuggestionClick: (Int) -> Unit,
+    onSuggestionLike: (Int, Int) -> Unit,
+    onSuggestionCancelLike: (Int, Int) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -42,7 +45,10 @@ fun SuggestionContent(
                 horizontal = 20.dp,
                 vertical = 16.dp
             )
-            .throttleClickable(true) { onSuggestionClick(suggestionUI.suggestionId) }
+            .throttleClickable(
+                enabled = true,
+                onClick = { onSuggestionClick(suggestionUI.suggestionId) }
+            )
     ) {
         Text(
             text = suggestionUI.title,
@@ -74,7 +80,11 @@ fun SuggestionContent(
         ) {
             DateTimeText(date = suggestionUI.date, time = suggestionUI.time)
             LikeButton(likeNum = suggestionUI.likeNum, isLiked = suggestionUI.isLiked) {
-
+                if (suggestionUI.isLiked) {
+                    onSuggestionCancelLike(index, suggestionUI.suggestionId)
+                } else {
+                    onSuggestionLike(index, suggestionUI.suggestionId)
+                }
             }
         }
 

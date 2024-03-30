@@ -2,75 +2,68 @@ package com.lgtm.android.mission_suggestion.ui.dashboard
 
 import android.os.Bundle
 import androidx.activity.viewModels
-import com.lgtm.android.common_ui.R.dimen
-import com.lgtm.android.common_ui.adapter.MissionSuggestionAdapter
-import com.lgtm.android.common_ui.base.BaseActivity
-import com.lgtm.android.common_ui.util.ItemDecorationUtil
-import com.lgtm.android.common_ui.util.setOnThrottleClickListener
-import com.lgtm.android.mission_suggestion.R
-import com.lgtm.android.mission_suggestion.databinding.ActivitySuggestionDashboardBinding
+import androidx.compose.runtime.Composable
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import com.lgtm.android.common_ui.base.BaseComposeActivity
+import com.lgtm.android.common_ui.theme.LGTMTheme
+import com.lgtm.android.mission_suggestion.ui.dashboard.presentation.SuggestionDashboardScreen
+import com.lgtm.android.mission_suggestion.ui.dashboard.presentation.contract.SuggestionDashboardUiEffect
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class SuggestionDashboardActivity : BaseActivity<ActivitySuggestionDashboardBinding>(R.layout.activity_suggestion_dashboard) {
+class SuggestionDashboardActivity : BaseComposeActivity() {
     private val suggestionDashboardViewModel by viewModels<SuggestionDashboardViewModel>()
-    private lateinit var missionSuggestionAdapter: MissionSuggestionAdapter
+
     override fun initializeViewModel() {
         viewModel = suggestionDashboardViewModel
     }
 
+    @Composable
+    override fun Content() {
+        LGTMTheme {
+            SuggestionDashboardScreen()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setupBindingData()
-        addDashboardItemDecoration()
-        observeMissionSuggestion()
-        initAdapter()
-        setBackButtonClickListener()
-        setCreateSuggestionButtonClickListener()
+        observeUiEffect()
     }
 
     override fun onResume() {
         super.onResume()
+        fetchSuggestionList()
+    }
+
+    private fun fetchSuggestionList() {
         suggestionDashboardViewModel.fetchSuggestionList()
     }
 
-    private fun setupBindingData() {
-        binding.viewModel = suggestionDashboardViewModel
-    }
+    private fun observeUiEffect() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                suggestionDashboardViewModel.suggestionDashboardUiEffect.collect { effect ->
+                    when (effect) {
+                        is SuggestionDashboardUiEffect.GoBack -> {
+                            finish()
+                        }
 
-    private fun observeMissionSuggestion() {
-        suggestionDashboardViewModel.suggestionList.observe(this) {
-            missionSuggestionAdapter.submitList(it)
-        }
-    }
+                        is SuggestionDashboardUiEffect.CreateSuggestion -> {
+                            lgtmNavigator.navigateToCreateSuggestion(this@SuggestionDashboardActivity)
+                        }
 
-    private fun addDashboardItemDecoration() {
-        val topMarginItemDecoration = ItemDecorationUtil.TopMarginItemDecoration(dimen.item_top_margin)
-        binding.rvMissionSuggestion.addItemDecoration(topMarginItemDecoration)
-    }
-
-    private fun initAdapter() {
-        missionSuggestionAdapter = MissionSuggestionAdapter(::onClickSuggestionItem)
-        binding.rvMissionSuggestion.adapter = missionSuggestionAdapter
-    }
-
-    private fun onClickSuggestionItem(suggestionId: Int) {
-        moveToSuggestionDetail(suggestionId)
-    }
-
-    private fun moveToSuggestionDetail(suggestionId: Int) {
-        lgtmNavigator.navigateToSuggestionDetail(this, suggestionId)
-    }
-
-    private fun setBackButtonClickListener() {
-        binding.ivBack.setOnThrottleClickListener {
-            finish()
-        }
-    }
-
-    private fun setCreateSuggestionButtonClickListener() {
-        binding.btnCreateSuggestion.setOnThrottleClickListener {
-            lgtmNavigator.navigateToCreateSuggestion(this)
+                        is SuggestionDashboardUiEffect.SuggestionDetail -> {
+                            lgtmNavigator.navigateToSuggestionDetail(
+                                this@SuggestionDashboardActivity,
+                                effect.suggestionId
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 }

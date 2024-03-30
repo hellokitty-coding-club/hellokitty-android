@@ -71,6 +71,7 @@ fun SuggestionDashboardScreen(
                 is UiState.Success -> {
                     SuggestionList(
                         modifier = Modifier
+                            .fillMaxHeight()
                             .layout { measurable, constraints ->
                                 val placeable = measurable.measure(constraints.offset(vertical = LAZYCOLUMN_PADDING*2.dp.roundToPx()))
                                 layout(

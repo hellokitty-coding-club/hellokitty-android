@@ -17,6 +17,7 @@ import com.lgtm.domain.repository.SuggestionRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -32,7 +33,7 @@ class SuggestionDetailViewModel @Inject constructor(
         get() = _detailState
 
     private val _detailUiEffect: MutableSharedFlow<SuggestionDetailUiEffect> = MutableSharedFlow(replay = 0)
-    override val detailUiEffect: MutableSharedFlow<SuggestionDetailUiEffect>
+    override val detailUiEffect: SharedFlow<SuggestionDetailUiEffect>
         get() = _detailUiEffect
 
     /* 미션 제안 상세 내용 */

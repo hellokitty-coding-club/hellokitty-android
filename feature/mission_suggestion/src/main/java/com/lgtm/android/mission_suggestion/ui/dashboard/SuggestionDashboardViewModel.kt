@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import com.lgtm.android.common_ui.base.BaseViewModel
+import com.lgtm.android.common_ui.model.SuggestionUI
 import com.lgtm.android.common_ui.model.mapper.toUiModel
 import com.lgtm.android.common_ui.util.UiState
 import com.lgtm.android.mission_suggestion.ui.dashboard.presentation.contract.SuggestionDashboardInputs
@@ -16,6 +17,7 @@ import com.lgtm.domain.mission_suggestion.SuggestionContent
 import com.lgtm.domain.mission_suggestion.SuggestionVO
 import com.lgtm.domain.mission_suggestion.SuggestionViewType
 import com.lgtm.domain.repository.AuthRepository
+import com.lgtm.domain.repository.SuggestionRepository
 import com.lgtm.domain.usecase.SuggestionUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -28,6 +30,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SuggestionDashboardViewModel @Inject constructor(
     private val suggestionUseCase: SuggestionUseCase,
+    private val suggestionRepository: SuggestionRepository,
     authRepository: AuthRepository
 ): BaseViewModel(), SuggestionDashboardInputs, SuggestionDashboardOutputs {
 
@@ -41,6 +44,7 @@ class SuggestionDashboardViewModel @Inject constructor(
     override val suggestionDashboardUiEffect: SharedFlow<SuggestionDashboardUiEffect>
         get() = _suggestionDashboardUiEffect
 
+    /* 미션 제안 fetch 기능 */
     fun fetchSuggestionList() {
         viewModelScope.launch(lgtmErrorHandler) {
             suggestionUseCase.getSuggestionList()
@@ -63,13 +67,47 @@ class SuggestionDashboardViewModel @Inject constructor(
         }
     }
 
-    override fun likeSuggestion() {
-        TODO("Not yet implemented")
+    /* 미션 제안 좋아요 기능 */
+
+    override fun likeSuggestion(index: Int, suggestionId: Int) {
+        viewModelScope.launch(lgtmErrorHandler) {
+            suggestionRepository.likeSuggestion(suggestionId)
+                .onSuccess {
+                    updateLikeState(index, it.likeNum, it.isLiked)
+                    Log.d(TAG, "likeSuggestion: $it")
+                }.onFailure {
+                    Firebase.crashlytics.recordException(it)
+                    Log.e(TAG, "likeSuggestion: $it")
+                }
+        }
     }
 
-    override fun cancelLikeSuggestion() {
-        TODO("Not yet implemented")
+    override fun cancelLikeSuggestion(index: Int, suggestionId: Int) {
+        viewModelScope.launch(lgtmErrorHandler) {
+            suggestionRepository.cancelLikeSuggestion(suggestionId)
+                .onSuccess {
+                    updateLikeState(index, it.likeNum, it.isLiked)
+                    Log.d(TAG, "cancelLikeSuggestion: $it")
+                }.onFailure {
+                    Firebase.crashlytics.recordException(it)
+                    Log.e(TAG, "cancelLikeSuggestion: $it")
+                }
+        }
     }
+
+    private fun updateLikeState(index: Int, likeNum: String, isLike: Boolean) {
+        if (suggestionDashboardState.value is UiState.Success) {
+            val suggestions = (suggestionDashboardState.value as UiState.Success).data.toMutableList()
+            val suggestion = suggestions[index] as SuggestionUI
+            suggestions[index] = suggestion.copy(
+                likeNum = likeNum,
+                isLiked = isLike
+            )
+            _suggestionDashboardState.value = UiState.Success(data = suggestions)
+        }
+    }
+
+    /* uiEffect 핸들 */
 
     override fun moveToCreateSuggestion() {
         viewModelScope.launch(lgtmErrorHandler) {

@@ -1,4 +1,4 @@
-package com.lgtm.android.mission_suggestion.ui.dashboard.sdui
+package com.lgtm.android.mission_suggestion.ui.dashboard.presentation.sdui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

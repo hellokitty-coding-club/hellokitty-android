@@ -8,6 +8,7 @@ import com.google.firebase.ktx.Firebase
 import com.lgtm.android.common_ui.base.BaseViewModel
 import com.lgtm.android.common_ui.model.SuggestionUI
 import com.lgtm.android.common_ui.model.mapper.toUiModel
+import com.lgtm.android.common_ui.model.mapper.toVOModel
 import com.lgtm.android.common_ui.util.UiState
 import com.lgtm.android.mission_suggestion.ui.dashboard.presentation.contract.SuggestionDashboardInputs
 import com.lgtm.android.mission_suggestion.ui.dashboard.presentation.contract.SuggestionDashboardOutputs
@@ -17,8 +18,10 @@ import com.lgtm.domain.mission_suggestion.SuggestionContent
 import com.lgtm.domain.mission_suggestion.SuggestionVO
 import com.lgtm.domain.mission_suggestion.SuggestionViewType
 import com.lgtm.domain.repository.AuthRepository
+import com.lgtm.domain.repository.LoggingRepository
 import com.lgtm.domain.repository.SuggestionRepository
 import com.lgtm.domain.usecase.SuggestionUseCase
+import com.swm.logging.android.logging_scheme.SWMLoggingScheme
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,6 +34,7 @@ import javax.inject.Inject
 class SuggestionDashboardViewModel @Inject constructor(
     private val suggestionUseCase: SuggestionUseCase,
     private val suggestionRepository: SuggestionRepository,
+    private val loggingRepository: LoggingRepository,
     authRepository: AuthRepository
 ): BaseViewModel(), SuggestionDashboardInputs, SuggestionDashboardOutputs {
 
@@ -115,9 +119,11 @@ class SuggestionDashboardViewModel @Inject constructor(
         }
     }
 
-    override fun moveToSuggestionDetail(suggestionId: Int) {
+    override fun moveToSuggestionDetail(suggestionId: Int, suggestionUI: SuggestionUI) {
+        val suggestionContent = suggestionUI.toVOModel()
         viewModelScope.launch(lgtmErrorHandler) {
             _suggestionDashboardUiEffect.emit(SuggestionDashboardUiEffect.SuggestionDetail(suggestionId))
+            _suggestionDashboardUiEffect.emit(SuggestionDashboardUiEffect.ShotSuggestionClickLogging(suggestionContent))
         }
     }
 
@@ -127,4 +133,7 @@ class SuggestionDashboardViewModel @Inject constructor(
         }
     }
 
+    fun shotSwmLogging(swmLoggingScheme: SWMLoggingScheme) {
+        loggingRepository.shotSwmLogging(swmLoggingScheme)
+    }
 }

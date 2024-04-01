@@ -155,7 +155,7 @@ fun SuggestionHeader(
 fun SuggestionList(
     modifier: Modifier = Modifier,
     suggestionList: List<SuggestionContent>,
-    onSuggestionClick: (Int) -> Unit,
+    onSuggestionClick: (Int, SuggestionUI) -> Unit,
     onSuggestionLike: (Int, Int) -> Unit,
     onSuggestionCancelLike: (Int, Int) -> Unit
 ) {
@@ -181,7 +181,7 @@ fun SuggestionList(
 fun getSuggestionViewByType(
     index: Int,
     suggestionContent: SuggestionContent,
-    onSuggestionClick: (Int) -> Unit,
+    onSuggestionClick: (Int, SuggestionUI) -> Unit,
     onSuggestionLike: (Int, Int) -> Unit,
     onSuggestionCancelLike: (Int, Int) -> Unit
 ) {

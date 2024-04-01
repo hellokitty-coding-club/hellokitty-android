@@ -25,7 +25,7 @@ import com.lgtm.android.common_ui.util.throttleClickable
 fun SuggestionContent(
     index: Int,
     suggestionUI: SuggestionUI,
-    onSuggestionClick: (Int) -> Unit,
+    onSuggestionClick: (Int, SuggestionUI) -> Unit,
     onSuggestionLike: (Int, Int) -> Unit,
     onSuggestionCancelLike: (Int, Int) -> Unit
 ) {
@@ -47,7 +47,7 @@ fun SuggestionContent(
             )
             .throttleClickable(
                 enabled = true,
-                onClick = { onSuggestionClick(suggestionUI.suggestionId) }
+                onClick = { onSuggestionClick(suggestionUI.suggestionId, suggestionUI) }
             )
     ) {
         Text(

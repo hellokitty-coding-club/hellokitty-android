@@ -14,7 +14,7 @@ import com.lgtm.domain.server_drive_ui.SduiViewType
 
 class SduiAdapter(
     private val onMissionClickListener: (SduiContent) -> Unit,
-    private val onRecommendationClickListener: () -> Unit
+    private val onRecommendationClickListener: (SduiContent) -> Unit
 ) : ListAdapter<SduiItemVO, SduiBaseHolder>(
     ItemDiffCallback<SduiItemVO>(onContentsTheSame = { old, new -> old == new },
         onItemsTheSame = { old, new -> old.content == new.content })

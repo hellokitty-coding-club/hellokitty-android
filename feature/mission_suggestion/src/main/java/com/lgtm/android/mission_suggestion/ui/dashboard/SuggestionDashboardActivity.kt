@@ -10,6 +10,8 @@ import com.lgtm.android.common_ui.base.BaseComposeActivity
 import com.lgtm.android.common_ui.theme.LGTMTheme
 import com.lgtm.android.mission_suggestion.ui.dashboard.presentation.SuggestionDashboardScreen
 import com.lgtm.android.mission_suggestion.ui.dashboard.presentation.contract.SuggestionDashboardUiEffect
+import com.lgtm.domain.logging.SwmCommonLoggingScheme
+import com.lgtm.domain.mission_suggestion.SuggestionContent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -61,9 +63,22 @@ class SuggestionDashboardActivity : BaseComposeActivity() {
                                 effect.suggestionId
                             )
                         }
+
+                        is SuggestionDashboardUiEffect.ShotSuggestionClickLogging -> {
+                            val scheme = getHomeSuggestionItemClickLoggingScheme(effect.suggestionContent)
+                            suggestionDashboardViewModel.shotSwmLogging(scheme)
+                        }
                     }
                 }
             }
         }
+    }
+
+    private fun getHomeSuggestionItemClickLoggingScheme(suggestionContent: SuggestionContent): SwmCommonLoggingScheme {
+        return SwmCommonLoggingScheme.Builder()
+            .setEventLogName("suggestionItemClick")
+            .setScreenName(this.javaClass)
+            .setLogData(mapOf("suggestionItem" to suggestionContent))
+            .build()
     }
 }

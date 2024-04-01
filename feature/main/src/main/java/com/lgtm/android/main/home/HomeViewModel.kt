@@ -9,11 +9,14 @@ import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import com.lgtm.android.common_ui.base.BaseViewModel
 import com.lgtm.domain.constants.Role
+import com.lgtm.domain.constants.UNKNOWN
 import com.lgtm.domain.entity.response.SduiItemVO
 import com.lgtm.domain.repository.AuthRepository
+import com.lgtm.domain.repository.LoggingRepository
 import com.lgtm.domain.repository.NotificationRepository
+import com.lgtm.domain.server_drive_ui.SectionSubItemVO
+import com.lgtm.domain.server_drive_ui.SectionTitleVO
 import com.lgtm.domain.usecase.MissionUseCase
-import com.swm.logging.android.SWMLogging
 import com.swm.logging.android.logging_scheme.SWMLoggingScheme
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -23,7 +26,8 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val useCase: MissionUseCase,
     private val notificationRepository: NotificationRepository,
-    authRepository: AuthRepository,
+    private val loggingRepository: LoggingRepository,
+    authRepository: AuthRepository
 ) : BaseViewModel() {
 
     private val role = authRepository.getMemberType()
@@ -61,12 +65,36 @@ class HomeViewModel @Inject constructor(
     }
 
     fun shotHomeMissionClickLogging(swmLoggingScheme: SWMLoggingScheme) {
-        SWMLogging.logEvent(swmLoggingScheme)
+        loggingRepository.shotSwmLogging(swmLoggingScheme)
     }
 
     fun getUserRole() = role
 
     fun shotFirstMissionClickLogging(swmLoggingScheme: SWMLoggingScheme) {
-        SWMLogging.logEvent(swmLoggingScheme)
+        loggingRepository.shotSwmLogging(swmLoggingScheme)
+    }
+
+    fun shotMissionSuggestionClickLogging(swmLoggingScheme: SWMLoggingScheme) {
+        loggingRepository.shotSwmLogging(swmLoggingScheme)
+    }
+
+    fun getMissionSuggestionTitle(): String {
+        val idx = getMissionSuggestionTitleIdx()
+        return idx?.let {
+            (_sduiList.value?.get(it)?.content as? SectionTitleVO)?.title ?: UNKNOWN
+        } ?: UNKNOWN
+    }
+
+    private fun getMissionSuggestionTitleIdx(): Int? {
+        var titleIdx: Int? = null
+        _sduiList.value?.let {
+            for(i in it.indices) {
+                if (it[i].content is SectionSubItemVO) {
+                    titleIdx = i-1
+                    break
+                }
+            }
+        }
+        return titleIdx
     }
 }

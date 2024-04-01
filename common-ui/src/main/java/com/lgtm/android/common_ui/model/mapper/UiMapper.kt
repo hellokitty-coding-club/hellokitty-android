@@ -264,6 +264,19 @@ fun SuggestionVO.toUiModel(): SuggestionUI {
     )
 }
 
+fun SuggestionUI.toVOModel(): SuggestionVO {
+    return SuggestionVO(
+        viewType = viewType,
+        title = title,
+        description = description,
+        suggestionId = suggestionId,
+        date = "$date $time",
+        likeNum = likeNum,
+        isLiked = isLiked,
+        isMyPost = isMyPost
+    )
+}
+
 fun NotificationVO.toUiModel(): NotificationUI {
     return NotificationUI(
         title = title,

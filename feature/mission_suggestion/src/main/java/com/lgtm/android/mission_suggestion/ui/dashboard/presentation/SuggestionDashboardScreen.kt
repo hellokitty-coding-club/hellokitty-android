@@ -28,7 +28,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lgtm.android.common_ui.R
 import com.lgtm.android.common_ui.components.buttons.BackButton
-import com.lgtm.android.common_ui.model.SuggestionUI
 import com.lgtm.android.common_ui.theme.LGTMTheme
 import com.lgtm.android.common_ui.util.UiState
 import com.lgtm.android.common_ui.util.throttleClickable
@@ -38,6 +37,7 @@ import com.lgtm.android.mission_suggestion.ui.dashboard.presentation.item.Sugges
 import com.lgtm.android.mission_suggestion.ui.dashboard.presentation.item.SuggestionListEmpty
 import com.lgtm.domain.mission_suggestion.SuggestionContent
 import com.lgtm.domain.mission_suggestion.SuggestionHeaderVO
+import com.lgtm.domain.mission_suggestion.SuggestionVO
 import com.lgtm.domain.mission_suggestion.SuggestionViewType
 
 const val LAZYCOLUMN_PADDING = 20
@@ -155,7 +155,7 @@ fun SuggestionHeader(
 fun SuggestionList(
     modifier: Modifier = Modifier,
     suggestionList: List<SuggestionContent>,
-    onSuggestionClick: (Int, SuggestionUI) -> Unit,
+    onSuggestionClick: (Int, SuggestionVO) -> Unit,
     onSuggestionLike: (Int, Int) -> Unit,
     onSuggestionCancelLike: (Int, Int) -> Unit
 ) {
@@ -181,13 +181,13 @@ fun SuggestionList(
 fun getSuggestionViewByType(
     index: Int,
     suggestionContent: SuggestionContent,
-    onSuggestionClick: (Int, SuggestionUI) -> Unit,
+    onSuggestionClick: (Int, SuggestionVO) -> Unit,
     onSuggestionLike: (Int, Int) -> Unit,
     onSuggestionCancelLike: (Int, Int) -> Unit
 ) {
     when(suggestionContent.viewType) {
         SuggestionViewType.HEADER -> SuggestionInfo(suggestionContent as SuggestionHeaderVO)
-        SuggestionViewType.CONTENT -> SuggestionContent(index, suggestionContent as SuggestionUI, onSuggestionClick, onSuggestionLike, onSuggestionCancelLike)
+        SuggestionViewType.CONTENT -> SuggestionContent(index, suggestionContent as SuggestionVO, onSuggestionClick, onSuggestionLike, onSuggestionCancelLike)
         SuggestionViewType.EMPTY -> SuggestionListEmpty()
     }
 }

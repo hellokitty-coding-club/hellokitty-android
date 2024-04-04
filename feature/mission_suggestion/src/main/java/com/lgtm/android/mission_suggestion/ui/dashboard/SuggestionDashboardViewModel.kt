@@ -6,9 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import com.lgtm.android.common_ui.base.BaseViewModel
-import com.lgtm.android.common_ui.model.SuggestionUI
-import com.lgtm.android.common_ui.model.mapper.toUiModel
-import com.lgtm.android.common_ui.model.mapper.toVOModel
 import com.lgtm.android.common_ui.util.UiState
 import com.lgtm.android.mission_suggestion.ui.dashboard.presentation.contract.SuggestionDashboardInputs
 import com.lgtm.android.mission_suggestion.ui.dashboard.presentation.contract.SuggestionDashboardOutputs
@@ -16,7 +13,6 @@ import com.lgtm.android.mission_suggestion.ui.dashboard.presentation.contract.Su
 import com.lgtm.domain.constants.Role
 import com.lgtm.domain.mission_suggestion.SuggestionContent
 import com.lgtm.domain.mission_suggestion.SuggestionVO
-import com.lgtm.domain.mission_suggestion.SuggestionViewType
 import com.lgtm.domain.repository.AuthRepository
 import com.lgtm.domain.repository.LoggingRepository
 import com.lgtm.domain.repository.SuggestionRepository
@@ -53,21 +49,12 @@ class SuggestionDashboardViewModel @Inject constructor(
         viewModelScope.launch(lgtmErrorHandler) {
             suggestionUseCase.getSuggestionList()
                 .onSuccess {
-                    _suggestionDashboardState.value = UiState.Success(data = convertToUiModel(it))
+                    _suggestionDashboardState.value = UiState.Success(data = it)
                     Log.d(TAG, "getSuggestion: $it")
                 }.onFailure {
                     Firebase.crashlytics.recordException(it)
                     Log.e(TAG, "getSuggestion: $it")
                 }
-        }
-    }
-
-    private fun convertToUiModel(suggestions: List<SuggestionContent>): List<SuggestionContent> {
-        return suggestions.map {
-            when(it.viewType) {
-               SuggestionViewType.CONTENT -> (it as SuggestionVO).toUiModel()
-               else -> it
-            }
         }
     }
 
@@ -102,7 +89,7 @@ class SuggestionDashboardViewModel @Inject constructor(
     private fun updateLikeState(index: Int, likeNum: String, isLike: Boolean) {
         if (suggestionDashboardState.value is UiState.Success) {
             val suggestions = (suggestionDashboardState.value as UiState.Success).data.toMutableList()
-            val suggestion = suggestions[index] as SuggestionUI
+            val suggestion = suggestions[index] as SuggestionVO
             suggestions[index] = suggestion.copy(
                 likeNum = likeNum,
                 isLiked = isLike
@@ -119,11 +106,10 @@ class SuggestionDashboardViewModel @Inject constructor(
         }
     }
 
-    override fun moveToSuggestionDetail(suggestionId: Int, suggestionUI: SuggestionUI) {
-        val suggestionContent = suggestionUI.toVOModel()
+    override fun moveToSuggestionDetail(suggestionId: Int, suggestionVO: SuggestionVO) {
         viewModelScope.launch(lgtmErrorHandler) {
             _suggestionDashboardUiEffect.emit(SuggestionDashboardUiEffect.SuggestionDetail(suggestionId))
-            _suggestionDashboardUiEffect.emit(SuggestionDashboardUiEffect.ShotSuggestionClickLogging(suggestionContent))
+            _suggestionDashboardUiEffect.emit(SuggestionDashboardUiEffect.ShotSuggestionClickLogging(suggestionVO))
         }
     }
 

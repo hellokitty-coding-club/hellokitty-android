@@ -17,7 +17,6 @@ import com.lgtm.android.common_ui.model.NotificationUI
 import com.lgtm.android.common_ui.model.PingPongJuniorUI
 import com.lgtm.android.common_ui.model.PingPongSeniorUI
 import com.lgtm.android.common_ui.model.ProfileGlanceUI
-import com.lgtm.android.common_ui.model.SuggestionUI
 import com.lgtm.domain.constants.ProcessState
 import com.lgtm.domain.constants.Role
 import com.lgtm.domain.constants.UNKNOWN
@@ -30,7 +29,6 @@ import com.lgtm.domain.entity.response.NotificationVO
 import com.lgtm.domain.entity.response.PingPongJuniorVO
 import com.lgtm.domain.entity.response.PingPongSeniorVO
 import com.lgtm.domain.entity.response.ProfileVO
-import com.lgtm.domain.mission_suggestion.SuggestionVO
 import com.lgtm.domain.profile.profileViewType.ProfileGlance
 import com.lgtm.domain.util.dotStyleDateFormatter
 import com.lgtm.domain.util.korean12HourTimeFormatter
@@ -248,34 +246,6 @@ fun PingPongSeniorVO.toUiModel(role: Role) = PingPongSeniorUI(
     nickname = nickname,
     processState = processState
 )
-
-fun SuggestionVO.toUiModel(): SuggestionUI {
-    val localDateTime = LocalDateTime.parse(this.date)
-    return SuggestionUI(
-        viewType = viewType,
-        title = title,
-        description = description,
-        suggestionId = suggestionId,
-        date = localDateTime.format(dotStyleDateFormatter),
-        time = localDateTime.format(korean12HourTimeFormatter),
-        likeNum = likeNum,
-        isLiked = isLiked,
-        isMyPost = isMyPost
-    )
-}
-
-fun SuggestionUI.toVOModel(): SuggestionVO {
-    return SuggestionVO(
-        viewType = viewType,
-        title = title,
-        description = description,
-        suggestionId = suggestionId,
-        date = "$date $time",
-        likeNum = likeNum,
-        isLiked = isLiked,
-        isMyPost = isMyPost
-    )
-}
 
 fun NotificationVO.toUiModel(): NotificationUI {
     return NotificationUI(

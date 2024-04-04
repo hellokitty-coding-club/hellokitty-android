@@ -7,7 +7,7 @@ data class SuggestionVO(
     val title: String,
     val description: String,
     val suggestionId: Int,
-    val date: LocalDateTime?,
+    val dateTime: LocalDateTime?,
     val likeNum: String,
     val isLiked: Boolean,
     val isMyPost: Boolean

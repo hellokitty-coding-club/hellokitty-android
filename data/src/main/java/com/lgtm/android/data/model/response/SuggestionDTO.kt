@@ -17,7 +17,7 @@ data class SuggestionDTO(
             suggestionId = requireNotNull(suggestionId),
             title = requireNotNull(title),
             description = requireNotNull(description),
-            date = parseDate(date),
+            dateTime = parseDate(date),
             likeNum = requireNotNull(likeNum),
             isLiked = requireNotNull(isLiked),
             isMyPost = requireNotNull(isMyPost)

@@ -80,7 +80,7 @@ fun SuggestionContent(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = DateTimeAnnotatedString(localDateTime = suggestionVO.date))
+            Text(text = DateTimeAnnotatedString(localDateTime = suggestionVO.dateTime))
             LikeButton(likeNum = suggestionVO.likeNum, isLiked = suggestionVO.isLiked) {
                 if (suggestionVO.isLiked) {
                     onSuggestionCancelLike(index, suggestionVO.suggestionId)

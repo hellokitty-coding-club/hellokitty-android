@@ -122,7 +122,7 @@ fun SuggestionDetailContent(
         )
 
         Text(
-            text =  DateTimeAnnotatedString(localDateTime = suggestionDetail.date),
+            text =  DateTimeAnnotatedString(localDateTime = suggestionDetail.dateTime),
             modifier = Modifier.padding(
                 vertical = 11.dp,
                 horizontal = 20.dp

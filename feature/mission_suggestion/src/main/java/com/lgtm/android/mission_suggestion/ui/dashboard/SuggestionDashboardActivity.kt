@@ -10,8 +10,9 @@ import com.lgtm.android.common_ui.base.BaseComposeActivity
 import com.lgtm.android.common_ui.theme.LGTMTheme
 import com.lgtm.android.mission_suggestion.ui.dashboard.presentation.SuggestionDashboardScreen
 import com.lgtm.android.mission_suggestion.ui.dashboard.presentation.contract.SuggestionDashboardUiEffect
+import com.lgtm.domain.constants.UNKNOWN
 import com.lgtm.domain.logging.SwmCommonLoggingScheme
-import com.lgtm.domain.mission_suggestion.SuggestionContent
+import com.lgtm.domain.mission_suggestion.SuggestionVO
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -65,7 +66,7 @@ class SuggestionDashboardActivity : BaseComposeActivity() {
                         }
 
                         is SuggestionDashboardUiEffect.ShotSuggestionClickLogging -> {
-                            val scheme = getHomeSuggestionItemClickLoggingScheme(effect.suggestionContent)
+                            val scheme = getHomeSuggestionItemClickLoggingScheme(effect.suggestionVO)
                             suggestionDashboardViewModel.shotSwmLogging(scheme)
                         }
                     }
@@ -74,11 +75,19 @@ class SuggestionDashboardActivity : BaseComposeActivity() {
         }
     }
 
-    private fun getHomeSuggestionItemClickLoggingScheme(suggestionContent: SuggestionContent): SwmCommonLoggingScheme {
+    private fun getHomeSuggestionItemClickLoggingScheme(suggestionVO: SuggestionVO): SwmCommonLoggingScheme {
         return SwmCommonLoggingScheme.Builder()
             .setEventLogName("suggestionItemClick")
             .setScreenName(this.javaClass)
-            .setLogData(mapOf("suggestionItem" to suggestionContent))
+            .setLogData(mapOf(
+                "title" to suggestionVO.title,
+                "description" to suggestionVO.description,
+                "suggestionId" to suggestionVO.suggestionId,
+                "dateTime" to (suggestionVO.dateTime ?: UNKNOWN),
+                "likeNum" to suggestionVO.likeNum,
+                "isLiked" to suggestionVO.isLiked,
+                "isMyPost" to suggestionVO.isMyPost
+            ))
             .build()
     }
 }

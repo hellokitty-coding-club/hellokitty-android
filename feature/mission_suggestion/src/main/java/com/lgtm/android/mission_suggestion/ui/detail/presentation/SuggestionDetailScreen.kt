@@ -29,11 +29,11 @@ import com.lgtm.android.common_ui.components.buttons.LikeButton
 import com.lgtm.android.common_ui.components.buttons.MenuButton
 import com.lgtm.android.common_ui.components.dialog.LgtmConfirmationDialog
 import com.lgtm.android.common_ui.components.dropdown.SuggestionDropDownOneMenu
-import com.lgtm.android.common_ui.components.texts.DateTimeText
-import com.lgtm.android.common_ui.model.SuggestionUI
+import com.lgtm.android.common_ui.components.texts.DateTimeAnnotatedString
 import com.lgtm.android.common_ui.theme.LGTMTheme
 import com.lgtm.android.common_ui.util.UiState
 import com.lgtm.android.mission_suggestion.ui.detail.SuggestionDetailViewModel
+import com.lgtm.domain.mission_suggestion.SuggestionVO
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -41,7 +41,7 @@ import kotlinx.coroutines.launch
 fun SuggestionDetailScreen(
     viewModel: SuggestionDetailViewModel = hiltViewModel()
 ) {
-    val suggestionDetailState: UiState<SuggestionUI> by viewModel.detailState.collectAsStateWithLifecycle()
+    val suggestionDetailState: UiState<SuggestionVO> by viewModel.detailState.collectAsStateWithLifecycle()
     val bottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val coroutineScope = rememberCoroutineScope()
 
@@ -91,7 +91,7 @@ fun SuggestionDetailScreen(
 @Composable
 fun SuggestionDetailContent(
     modifier: Modifier = Modifier,
-    suggestionDetail: SuggestionUI,
+    suggestionDetail: SuggestionVO,
     onDeleteSuggestion: () -> Unit,
     onReportSuggestion: () -> Unit,
     onBackButtonClick: () -> Unit
@@ -121,9 +121,8 @@ fun SuggestionDetailContent(
             color = LGTMTheme.colors.black
         )
 
-        DateTimeText(
-            date = suggestionDetail.date,
-            time = suggestionDetail.time,
+        Text(
+            text =  DateTimeAnnotatedString(localDateTime = suggestionDetail.dateTime),
             modifier = Modifier.padding(
                 vertical = 11.dp,
                 horizontal = 20.dp

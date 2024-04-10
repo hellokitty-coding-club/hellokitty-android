@@ -16,16 +16,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.lgtm.android.common_ui.components.buttons.LikeButton
-import com.lgtm.android.common_ui.components.texts.DateTimeText
-import com.lgtm.android.common_ui.model.SuggestionUI
+import com.lgtm.android.common_ui.components.texts.DateTimeAnnotatedString
 import com.lgtm.android.common_ui.theme.LGTMTheme
 import com.lgtm.android.common_ui.util.throttleClickable
+import com.lgtm.domain.mission_suggestion.SuggestionVO
 
 @Composable
 fun SuggestionContent(
     index: Int,
-    suggestionUI: SuggestionUI,
-    onSuggestionClick: (Int) -> Unit,
+    suggestionVO: SuggestionVO,
+    onSuggestionClick: (Int, SuggestionVO) -> Unit,
     onSuggestionLike: (Int, Int) -> Unit,
     onSuggestionCancelLike: (Int, Int) -> Unit
 ) {
@@ -47,11 +47,11 @@ fun SuggestionContent(
             )
             .throttleClickable(
                 enabled = true,
-                onClick = { onSuggestionClick(suggestionUI.suggestionId) }
+                onClick = { onSuggestionClick(suggestionVO.suggestionId, suggestionVO) }
             )
     ) {
         Text(
-            text = suggestionUI.title,
+            text = suggestionVO.title,
             color = LGTMTheme.colors.black,
             style = LGTMTheme.typography.body2,
             maxLines = 2,
@@ -66,7 +66,7 @@ fun SuggestionContent(
 
         Text(
             modifier = Modifier.padding(top = 10.dp),
-            text = suggestionUI.description,
+            text = suggestionVO.description,
             color = LGTMTheme.colors.black,
             style = LGTMTheme.typography.body3R,
             maxLines = 3,
@@ -74,16 +74,18 @@ fun SuggestionContent(
         )
 
         Row(
-            modifier = Modifier.padding(top = 10.dp).fillMaxWidth(),
+            modifier = Modifier
+                .padding(top = 10.dp)
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            DateTimeText(date = suggestionUI.date, time = suggestionUI.time)
-            LikeButton(likeNum = suggestionUI.likeNum, isLiked = suggestionUI.isLiked) {
-                if (suggestionUI.isLiked) {
-                    onSuggestionCancelLike(index, suggestionUI.suggestionId)
+            Text(text = DateTimeAnnotatedString(localDateTime = suggestionVO.dateTime))
+            LikeButton(likeNum = suggestionVO.likeNum, isLiked = suggestionVO.isLiked) {
+                if (suggestionVO.isLiked) {
+                    onSuggestionCancelLike(index, suggestionVO.suggestionId)
                 } else {
-                    onSuggestionLike(index, suggestionUI.suggestionId)
+                    onSuggestionLike(index, suggestionVO.suggestionId)
                 }
             }
         }

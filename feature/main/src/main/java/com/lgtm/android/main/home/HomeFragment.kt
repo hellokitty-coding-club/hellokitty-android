@@ -11,8 +11,10 @@ import com.lgtm.android.main.databinding.FragmentHomeBinding
 import com.lgtm.domain.constants.Role
 import com.lgtm.domain.logging.FirstMissionClickScheme
 import com.lgtm.domain.logging.HomeMissionClickScheme
+import com.lgtm.domain.logging.SwmCommonLoggingScheme
 import com.lgtm.domain.server_drive_ui.SduiContent
 import com.lgtm.domain.server_drive_ui.SectionItemVO
+import com.lgtm.domain.server_drive_ui.SectionSubItemVO
 import com.swm.logging.android.logging_scheme.SWMLoggingScheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.properties.Delegates
@@ -84,8 +86,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         moveToMissionDetail((sduiContent as SectionItemVO).missionId)
     }
 
-    private fun onClickRecommendation() {
+    private fun onClickRecommendation(sduiContent: SduiContent) {
         moveToRecommendationDashboard()
+        logMissionSuggestionClick(sduiContent)
     }
 
     private fun logFirstMissionClick(sduiContent: SduiContent) {
@@ -142,6 +145,20 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             }
             lgtmNavigator.openUrlInBrowser(requireContext(), url)
         }
+    }
+
+    private fun logMissionSuggestionClick(sduiContent: SduiContent) {
+        val role = homeViewModel.getUserRole()
+        val missionSuggestionClickScheme = SwmCommonLoggingScheme.Builder()
+            .setEventLogName("suggestionClick")
+            .setScreenName(this.javaClass)
+            .setLogData(mapOf(
+                "memberType" to role.role,
+                "suggestionTitle" to homeViewModel.getMissionSuggestionTitle(),
+                "suggestionDescription" to (sduiContent as SectionSubItemVO).text
+            ))
+            .build()
+        homeViewModel.shotMissionSuggestionClickLogging(missionSuggestionClickScheme)
     }
 
 }

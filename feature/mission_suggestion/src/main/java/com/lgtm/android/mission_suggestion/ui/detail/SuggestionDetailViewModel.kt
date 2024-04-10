@@ -6,12 +6,11 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import com.lgtm.android.common_ui.base.BaseViewModel
-import com.lgtm.android.common_ui.model.SuggestionUI
-import com.lgtm.android.common_ui.model.mapper.toUiModel
 import com.lgtm.android.common_ui.util.UiState
 import com.lgtm.android.mission_suggestion.ui.detail.presentation.contract.SuggestionDetailInputs
 import com.lgtm.android.mission_suggestion.ui.detail.presentation.contract.SuggestionDetailOutputs
 import com.lgtm.android.mission_suggestion.ui.detail.presentation.contract.SuggestionDetailUiEffect
+import com.lgtm.domain.mission_suggestion.SuggestionVO
 import com.lgtm.domain.repository.AuthRepository
 import com.lgtm.domain.repository.SuggestionRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,8 +27,8 @@ class SuggestionDetailViewModel @Inject constructor(
     private val authRepository: AuthRepository
 ): BaseViewModel(), SuggestionDetailInputs, SuggestionDetailOutputs {
 
-    private val _detailState: MutableStateFlow<UiState<SuggestionUI>> = MutableStateFlow(UiState.Init)
-    override val detailState: StateFlow<UiState<SuggestionUI>>
+    private val _detailState: MutableStateFlow<UiState<SuggestionVO>> = MutableStateFlow(UiState.Init)
+    override val detailState: StateFlow<UiState<SuggestionVO>>
         get() = _detailState
 
     private val _detailUiEffect: MutableSharedFlow<SuggestionDetailUiEffect> = MutableSharedFlow(replay = 0)
@@ -42,7 +41,7 @@ class SuggestionDetailViewModel @Inject constructor(
             _detailState.value = UiState.Init
             suggestionRepository.getSuggestionDetail(id)
                 .onSuccess {
-                    _detailState.value = UiState.Success(data = it.toUiModel())
+                    _detailState.value = UiState.Success(data = it)
                     Log.d(TAG, "getSuggestionDetail: $it")
                 }.onFailure {
                     _detailState.value = UiState.Failure(msg = it.message)

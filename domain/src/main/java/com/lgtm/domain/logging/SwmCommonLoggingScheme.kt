@@ -3,6 +3,7 @@ package com.lgtm.domain.logging
 import com.swm.logging.android.logging_scheme.SWMLoggingScheme
 import java.lang.reflect.Type
 
+@Suppress("unused")
 class SwmCommonLoggingScheme(
     eventLogName: String,
     screenName: String,
@@ -43,8 +44,16 @@ class SwmCommonLoggingScheme(
 
 
         fun setLogData(map: Map<String, Any>): Builder {
-            this.map = map
+            this.map = map.mapValues { handleLocalDateTime(it.value) }
             return this
+        }
+
+        private fun handleLocalDateTime(value: Any): Any {
+            return if (value is java.time.LocalDateTime) {
+                value.toString()
+            } else {
+                value
+            }
         }
 
         fun setLogVersion(logVersion: Int): Builder {

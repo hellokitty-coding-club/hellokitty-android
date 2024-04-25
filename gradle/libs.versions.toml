@@ -3,8 +3,8 @@
 compileSdk = "34"
 minSdk = "26"
 targetSdk = "34"
-appVersion = "1.1.3"
-versionCode = "113"
+appVersion = "1.1.4"
+versionCode = "114"
 
 # Kotlin and Serialization
 kotlin = "1.7.20"

@@ -232,6 +232,7 @@ class CreateMissionViewModel @Inject constructor(
                 }.onFailure {
                     val errorMessage = if (it is LgtmResponseException) it.message else "미션 생성 실패"
                     _createMissionState.postValue(NetworkState.Failure(errorMessage))
+                    throw it
                 }
         }
     }

@@ -26,12 +26,13 @@ abstract class BaseComposeActivity: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initializeViewModel()
+        moveToSignInActivity()
         setContent {
             Content()
         }
     }
 
-    fun moveToSignInActivity() {
+    private fun moveToSignInActivity() {
         viewModel?.moveToSignIn?.observe(this) {
             lgtmNavigator.navigateToSignIn(this)
             finishAffinity()

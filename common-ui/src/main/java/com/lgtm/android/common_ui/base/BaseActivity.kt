@@ -29,9 +29,10 @@ abstract class BaseActivity<T : ViewDataBinding>(
         initializeViewModel()
         binding = DataBindingUtil.setContentView(this, layoutRes)
         binding.lifecycleOwner = this
+        moveToSignInActivity()
     }
 
-    fun moveToSignInActivity() {
+    private fun moveToSignInActivity() {
         viewModel?.moveToSignIn?.observe(this) {
             lgtmNavigator.navigateToSignIn(this)
             finishAffinity()

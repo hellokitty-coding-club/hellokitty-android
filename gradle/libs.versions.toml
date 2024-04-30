@@ -74,6 +74,7 @@ sonarqube = "4.0.0.2929"
 compose-bom = "2023.08.00"
 compose-appcompat-theme = "0.28.0"
 compose-constraintlayout = "1.0.1"
+compose-activity = "1.9.0"
 
 # Other
 jsoup = "1.13.1"
@@ -148,7 +149,7 @@ compose-material = { module = "androidx.compose.material:material" }
 compose-ui = { module = "androidx.compose.ui:ui" }
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 compose-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
-compose-activity = { module = "androidx.activity:activity-compose" }
+compose-activity = { module = "androidx.activity:activity-compose", version.ref = "compose-activity"}
 compose-foundation = { module = "androidx.compose.foundation:foundation" }
 compose-constraintlayout = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "compose-constraintlayout"}
 compose-appcompat-theme = { module = "com.google.accompanist:accompanist-appcompat-theme" , version.ref = "compose-appcompat-theme"}

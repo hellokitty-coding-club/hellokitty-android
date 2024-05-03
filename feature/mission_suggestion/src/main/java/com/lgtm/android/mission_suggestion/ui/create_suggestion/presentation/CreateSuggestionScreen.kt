@@ -82,6 +82,7 @@ fun CreateSuggestionScreen(
 
                     SuggestionSection(
                         modifier = Modifier
+                            .verticalScroll(rememberScrollState())
                             .constrainAs(suggestionSection) {
                                 top.linkTo(parent.top)
                                 start.linkTo(parent.start)
@@ -192,7 +193,6 @@ fun SuggestionSection(
 ) {
     Column(
         modifier
-            .verticalScroll(rememberScrollState(), reverseScrolling = true)
             .padding(
                 start = 20.dp,
                 end = 20.dp,

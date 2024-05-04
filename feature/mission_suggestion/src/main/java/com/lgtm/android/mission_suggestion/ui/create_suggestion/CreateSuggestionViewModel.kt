@@ -28,7 +28,7 @@ class CreateSuggestionViewModel @Inject constructor(
     private val _suggestionTitleTextData = MutableStateFlow(
         EditTextData(
             text = MutableLiveData(""),
-            infoStatus = MutableLiveData(InfoType.TITLE_REQUIRED),
+            infoStatus = MutableLiveData(InfoType.NONE),
             maxLength = 100,
             hint = "제목을 입력하세요."
         )
@@ -52,7 +52,7 @@ class CreateSuggestionViewModel @Inject constructor(
             text = MutableLiveData(""),
             maxLength = 1000,
             hint = "본문을 입력하세요.",
-            infoStatus = MutableLiveData(InfoType.CONTENT_REQUIRED),
+            infoStatus = MutableLiveData(InfoType.NONE),
             wordCountVisibility = false
         )
     )
@@ -75,7 +75,10 @@ class CreateSuggestionViewModel @Inject constructor(
 
     private fun setIsSuggestionValid() {
         _isSuggestionValid.value =
-            (_suggestionTitleTextData.value.infoStatus.value == InfoType.NONE) && (_suggestionContentTextData.value.infoStatus.value == InfoType.NONE)
+            (_suggestionTitleTextData.value.infoStatus.value == InfoType.NONE)
+                    && (_suggestionContentTextData.value.infoStatus.value == InfoType.NONE)
+                    && (_suggestionTitleTextData.value.text.value?.isNotBlank() == true)
+                    && (_suggestionContentTextData.value.text.value?.isNotBlank() == true)
     }
 
     private val _isSuggestionEmpty = MutableStateFlow(true)

@@ -176,7 +176,7 @@ fun CreateSuggestionNextButton(
         Text(
             modifier = Modifier
                 .padding(vertical = 14.dp),
-            text = stringResource(id = R.string.suggestion_next),
+            text = stringResource(id = R.string.suggestion_complete),
             style = LGTMTheme.typography.body1M,
             color = if (enabledState) LGTMTheme.colors.black else LGTMTheme.colors.gray_4
         )

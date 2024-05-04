@@ -171,7 +171,7 @@ fun SuggestionList(
             getSuggestionViewByType(index, suggestionList[index], onSuggestionClick, onSuggestionLike, onSuggestionCancelLike)
             // 마지막 요소 아래에 Spacer 배치
             if (index == suggestionList.size - 1) {
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(134.dp))
             }
         }
     }

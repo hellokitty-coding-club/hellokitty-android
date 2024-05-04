@@ -244,7 +244,7 @@ fun SuggestionTitle(
                 LGTMEditText(context).apply {
                     setLifecycleOwner(lifecycleOwner)
                     bindStateEditTextData(title)
-                    setMaxLine(1)
+                    setMaxLine(2)
                     onTextChangedListener {
                         updateTitleEditTextData()
                     }
